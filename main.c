@@ -1,18 +1,18 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "linked.h"
+#include "SortedList.h"
 
 void doAddres(Student * student);//Give the interface to register a new address manually
 void doGrades(int * grade_count, Student * student);//Give the interface to register a new grade array manually
-int studentRegistration(int * grade_count, LinkedList * list);//Give the interface to register a new student manually
-void loadStudentsFromFile(LinkedList * list);//Didn't work ;-;
-void autoLoad(LinkedList * list);//generet 30 students and adds they to the list. Yes debbug only
+int studentRegistration(int * grade_count, TreeRoot * root);//Give the interface to register a new student manually
+void loadStudentsFromFile(TreeRoot * root);//Didn't work ;-;
+void autoLoad(TreeRoot * root);//generet 30 students and adds they to the list. Yes debbug only
 
 //Make the main menu
 int main() {
 
-    LinkedList list;
-    criarLista(&list);
+    TreeRoot root;
+    newTree(&root);
     int loop = 1;//variavel de controle do loop do programa
     int escolha = 0;//variavel que armazena qual função o usuario escolheu
     int result = 0;
@@ -22,6 +22,7 @@ int main() {
     while(loop){
         // char name[MAX] = "";
         //Menu para escolha de funções do programa
+        system("cls");//clear the terminal
         printf("====MENU====\n");//Make the menu a little bit more beautiful
         printf("1. Cadastrar um aluno\n");//Use whatever means necessary to register a new student
         printf("2. Auto load students\n");//for debbug only
@@ -36,25 +37,25 @@ int main() {
         //switch case statement, to chose what to do
         switch(escolha){
             case 1:
-                studentRegistration(&grade_count, &list);//register a student(manually) and add him to the list
+                studentRegistration(&grade_count, &root);//register a student(manually) and add him to the list
                 break;//stop the switch statement :0//stop the switch statement :0
 
             case 2:
-                autoLoad(&list);//debbug only
+                autoLoad(&root);//debbug only
                 break;//stop the switch statement :0
 
             case 3:
                 printf("Type the student registration number\n");
                 scanf("%d", &result);
                 fflush(stdin);//cleans the input file
-                editStudent(getStudent(&list,result));
+                editStudent(getStudent(root.first, result)->student);
                 break;//stop the switch statement :0
 
             case 4:
                 printf("Type the student registration number\n");
                 scanf("%d", &result);
                 fflush(stdin);//cleans the input file
-                if(removeFromList(&list,result)){
+                if(removeFromList(&root, result)){
                     printf("Student removed\n");
                 }
                 break;//stop the switch statement :0
@@ -63,7 +64,7 @@ int main() {
                 system("cls");//clear the terminal
                 //printf("\e[1;1H\e[2J");//if you are using unix based systems call this line instead
                 printf("====Student List====\n");
-                printList(&list);
+                printList(&root);
                 printf("====List Finished====\n");
                 system("PAUSE");
                 break;//stop the switch statement :0
@@ -71,7 +72,7 @@ int main() {
             case 6:
                 system("cls");
                 printf("====Student List====\n");
-                printApprovedsStudents(&list);
+                printApprovedsStudents(&root);
                 printf("====List Finished====\n");
                 system("PAUSE");
                 break;//stop the switch statement :0
@@ -88,7 +89,7 @@ int main() {
 }
 
 //Give the interface to register a new student manually
-int studentRegistration(int * grade_count, LinkedList * list){
+int studentRegistration(int * grade_count, TreeRoot * root){
     char name[MAX], sex[SEX_MAX], course[MAX];
     int enroll = 0, age = 0;
 
@@ -120,7 +121,13 @@ int studentRegistration(int * grade_count, LinkedList * list){
 
     doGrades(grade_count, student);
     doAddres(student);
-    addSort(list, student);
+    if (isEmpty(root))
+    {
+        root->first = addSort(root->first, student);
+    }else
+    {
+        addSort(root->first, student);
+    }
     return 1;
 }
 
@@ -167,7 +174,7 @@ void doAddres(Student * student){
 }
 
 //Didn't work ;-;
-void loadStudentsFromFile(LinkedList * list){
+void loadStudentsFromFile(TreeRoot * root){
     FILE * file;
     file = fopen("aluno.txt", "r");
     //fscanf(file, "%d ", &student_count);
@@ -189,14 +196,20 @@ void loadStudentsFromFile(LinkedList * list){
         char CEP[MAX];
         fscanf(file, "%s\n%d\n%s", streat_name, &number, CEP);
         setAddres(student, streat_name, number, CEP);
-        addSort(list, student);
+        if (isEmpty(root))
+        {
+            root->first = addSort(root->first, student);
+        }else
+        {
+            addSort(root->first, student);
+        }
     }
     fclose(file);
     //Student * student = newStudent(enroll, name, age, sex, course);
 }
 
 //generet 30 students and adds they to the list. Yes debbug only
-void autoLoad(LinkedList * list){
+void autoLoad(TreeRoot * root){
     int enroll = 0;
     
     for (int i = 0; i < 30; i++, enroll++)
@@ -210,6 +223,13 @@ void autoLoad(LinkedList * list){
             addNota(student, grade, weight, i);
         }
         setAddres(student, "streat_name", 345, "279236");
-        addSort(list, student);
+        if (isEmpty(root))
+        {
+            root->first = addSort(root->first, student);
+        }else
+        {
+            addSort(root->first, student);
+        }
+        
     }
 }

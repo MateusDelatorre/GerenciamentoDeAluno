@@ -144,31 +144,32 @@ void editGrades(Student * student){
     while(loop){
         int i = 0;
         double input = 0.0;
+        system("cls");//clear the terminal
         printf("====GRADES EDIT MENU====\n");
         for (; i < student->grade_count; i++)
         {
-            printf("%d. Edit grade number %d\n", (i*2)+1, (i*2)+1);
-            printf("%d. Edit weight number %d\n", (i*2)+2, (i*2)+2);
+            printf("%d. Edit grade number %d\n", (i*2)+1, i+1);
+            printf("%d. Edit weight number %d\n", (i*2)+2, i+1);
         }
-        printf("%d. Sair\n", (i*2)+3);//setta o valor da variavel loop para 0, saindo loop do menu
+        printf("%d. Sair\n", (i*2)+1);//setta o valor da variavel loop para 0, saindo loop do menu
         scanf("%d", &escolha);//recebe um numero que o usuario escrever
         fflush(stdin);//cleans the input file
 
-        if (escolha = (i*2)+3)
+        if (escolha == (i*2)+1)
         {
             return;
         }
         
-        if((i % 2) == 0){
+        if((escolha % 2) == 0){
             printf("Type weight:\n");
             scanf("%lf", &input);
             fflush(stdin);//cleans the input file
-            student->notas[i]->weight = input;
+            student->notas[(escolha/2) - 1]->weight = input;
         }else{
             printf("Type grade:\n");
             scanf("%lf", &input);
             fflush(stdin);//cleans the input file
-            student->notas[i]->grade = input;
+            student->notas[(escolha - 1) / 2]->grade = input;
         }
     }
 }
@@ -183,6 +184,7 @@ void editAdress(Address * address){
     while(loop){
         // char name[MAX] = "";
         //Menu para escolha de funções do programa
+        system("cls");//clear the terminal
         printf("====EDIT ADRESS====\n");
         printf("1. Edit streat name\n");//
         printf("2. Edit number\n");//
@@ -242,6 +244,12 @@ void editAdress(Address * address){
 
 //Make the menu to edit the student data
 void editStudent(Student * student){
+    if (student == NULL)
+    {
+        printf("Can't find this student\n");
+        return;
+    }
+    
     int loop = 1;//variavel de controle do loop do programa
     int escolha = 0;//variavel que armazena qual função o usuario escolheu
     int result = 0;
@@ -250,6 +258,7 @@ void editStudent(Student * student){
     while(loop){
         // char name[MAX] = "";
         //Menu para escolha de funções do programa
+        system("cls");//clear the terminal
         printf("====EDIT====\n");
         printf("1. Edit Student Name\n");//
         printf("2. Edit Student Age\n");//

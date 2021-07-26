@@ -70,40 +70,9 @@ struct branch* addSort(struct branch * tree_branch, Student * student){
 			tree_branch->right_branch = addSort(tree_branch->right_branch, student);
 		}else{
 			printf("duplicated\n");
+			return NULL;
 		}
 	}
-}
-
-struct branch* addSortBranchs(struct branch * tree_branch, struct branch * new_branch){
-	if(tree_branch == NULL){
-		return new_branch;
-	}else{
-		if (tree_branch->student->enroll > new_branch->student->enroll)
-		{
-			tree_branch->left_branch = addSortBranchs(tree_branch->left_branch, new_branch);
-		}else if (tree_branch->student->enroll < new_branch->student->enroll)
-		{
-			tree_branch->right_branch = addSortBranchs(tree_branch->right_branch, new_branch);
-		}else{
-			printf("duplicated\n");
-		}
-	}
-}
-
-void goThroughBranchs(TreeRoot * root, TreeBranch * tree_branch, struct branch* (*f)(struct branch * tree_branch, struct branch * new_branch)){//
-	if(tree_branch != NULL){
-		goThroughBranchs(root, tree_branch->left_branch, f);
-		goThroughBranchs(root, tree_branch->right_branch, f);
-		(*f)(tree_branch, root->first);
-	}
-}
-
-void TreeSize(TreeRoot * root){
-	root->size += 1;
-}
-
-void printBranch(TreeBranch * tree_branch){
-	printStudent(tree_branch->student);
 }
 
 //Go to the lowest branch and start to trigger a function call for all branches.
@@ -115,44 +84,87 @@ void goThroughTree(TreeBranch * tree_branch, void (*f)(TreeBranch * tree_branch)
 	}
 }
 
-struct branch* find(TreeBranch * tree_branch, int enroll){
+void printBranch(TreeBranch * tree_branch){
+	printStudent(tree_branch->student);
+}
+
+void printList(TreeRoot * root){
+	goThroughTree(root->first, printBranch);
+}
+
+void printApprovedStudent(TreeBranch * tree_branch){
+	if(studentApproved(tree_branch->student) >= 7.0){
+		printStudent(tree_branch->student);
+	}
+}
+
+void printApprovedsStudents(TreeRoot * root){
+	goThroughTree(root->first, printApprovedStudent);
+}
+
+struct branch* getStudent(TreeBranch * tree_branch, int enroll){
 	if(tree_branch == NULL){
-		printf("Can't find this student\n");
 		return NULL;
 	}else{
 		if (tree_branch->student->enroll > enroll)
 		{
-			find(tree_branch->left_branch, enroll);
+			return getStudent(tree_branch->left_branch, enroll);
 		}else if (tree_branch->student->enroll < enroll)
 		{
-			find(tree_branch->right_branch, enroll);
+			return getStudent(tree_branch->right_branch, enroll);
 		}else{
 			return tree_branch;
 		}
 	}
 }
 
-int delete(TreeRoot * root, int enroll){
-	TreeBranch * tree_branch = find(root->first, enroll);
-	if (tree_branch == NULL)
+struct branch* getLowerBranch(TreeBranch * tree_branch, int enroll){
+	if(tree_branch == NULL){
+		return NULL;
+	}else{
+		if (tree_branch->student->enroll > enroll)
+		{
+			return getLowerBranch(tree_branch->left_branch, enroll);
+		}else if (tree_branch->student->enroll < enroll)
+		{
+			return getLowerBranch(tree_branch->right_branch, enroll);
+		}else{
+			return tree_branch;
+		}
+	}
+}
+
+
+int removeFromList(TreeRoot * root, int enroll){
+	/*
+	So i find this on the internet:
+	Deleting a node that has two subtrees is very complicated....
+	Here is the summary of the procedure:
+        First, we find the deletion node p (= the node that we want to delete)
+        Find the successor node of p(lower value from the right branch of the deletion node)
+        Replace the content of node p with the content of the successor node
+        Delete the successor node
+	source: http://www.mathcs.emory.edu/~cheung/Courses/171/Syllabus/9-BinTree/BST-delete2.html
+	Acessed on: 26/07/2021
+	*/
+
+	TreeBranch * deletion_branch = getStudent(root->first, enroll);//Deletion node found!
+	
+	if (deletion_branch == NULL)//just to be sure
 	{
 		return 0;
 	}
 
-	struct branch * new_branch;
-	new_branch = (struct branch*) malloc(sizeof(struct branch));
-	new_branch->left_branch = tree_branch->left_branch;
-	new_branch->right_branch = tree_branch->right_branch;
-	
-	// free(tree_branch->student);
-	// free(tree_branch);
-	tree_branch = NULL;
-	
-	goThroughBranchs(root, new_branch->left_branch, addSortBranchs);
-	goThroughBranchs(root, new_branch->right_branch, addSortBranchs);
-	
-	free(new_branch);
-	return 1;
+	TreeBranch * successor_branch = getLowerBranch(deletion_branch, deletion_branch->student->enroll);
+
+	if (successor_branch == NULL)//there is no successor branch
+	{
+		free(deletion_branch);
+		return 1;
+	}
+
+	deletion_branch = successor_branch;
+	free(successor_branch);
 }
 
 #endif
