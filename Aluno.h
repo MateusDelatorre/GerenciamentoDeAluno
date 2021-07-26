@@ -126,7 +126,7 @@ void printStudent(Student * student){
     printf("Student sex: %s\n", student->sex);
     printf("Student course: %s\n", student->course);
     printf("Student grades: ");
-    for (int i = 0; i > student->grade_count; i++)
+    for (int i = 0; i < student->grade_count; i++)
     {
         printNota(student->notas[i]);
     }

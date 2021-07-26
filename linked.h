@@ -39,6 +39,7 @@ int addSort(LinkedList *list, Student * student) {
 		struct Item* new_item;
 		new_item = (struct Item*) malloc(sizeof(struct Item));
 		new_item->student = student;
+		new_item->next = NULL;
 		
 		if(estahVazia(list)){
 			list->first = new_item;
@@ -75,15 +76,11 @@ int indexOf(LinkedList *list, int enroll){
 	if(estahVazia(list)) return -1;
 	item_next = list->first;
 
-    while (hasNext(item_next)){
-		if (item_next->student->enroll == enroll)
-		{
-			return index;
-		}
+    while (item_next != NULL && item_next->student->enroll != enroll){
 		index++;
         item_next = item_next->next;
     }
-	return -1;
+	return index;
 }
 
 //removes the student that matches the enrollment number given
@@ -102,6 +99,7 @@ int removeFromList(LinkedList *list, int enroll){
 	freeStudentData(item_next->student);
 	free(item_next->student);
 	free(item_next);
+	list->size -= 1;
 	return 1;
 }
 

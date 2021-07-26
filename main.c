@@ -63,12 +63,13 @@ int main() {
                 system("cls");//clear the terminal
                 //printf("\e[1;1H\e[2J");//if you are using unix based systems call this line instead
                 printf("====Student List====\n");
-                printApprovedsStudents(&list);
+                printList(&list);
                 printf("====List Finished====\n");
                 system("PAUSE");
                 break;//stop the switch statement :0
 
             case 6:
+                system("cls");
                 printf("====Student List====\n");
                 printApprovedsStudents(&list);
                 printf("====List Finished====\n");
@@ -205,7 +206,7 @@ void autoLoad(LinkedList * list){
         setGradeCount(student, 3);
         for (int i = 0; i < 3; i++)
         {
-            double grade = 5, weight = 0;
+            double grade = 5, weight = 1;
             addNota(student, grade, weight, i);
         }
         setAddres(student, "streat_name", 345, "279236");
