@@ -22,6 +22,7 @@ int main() {
     while(loop){
         // char name[MAX] = "";
         //Menu para escolha de funções do programa
+        system("cls");//clear the terminal
         printf("====MENU====\n");//Make the menu a little bit more beautiful
         printf("1. Cadastrar um aluno\n");//Use whatever means necessary to register a new student
         printf("2. Auto load students\n");//for debbug only
@@ -44,6 +45,7 @@ int main() {
                 break;//stop the switch statement :0
 
             case 3:
+                system("cls");//clear the terminal
                 printf("Type the student registration number\n");
                 scanf("%d", &result);
                 fflush(stdin);//cleans the input file
@@ -51,6 +53,7 @@ int main() {
                 break;//stop the switch statement :0
 
             case 4:
+                system("cls");//clear the terminal
                 printf("Type the student registration number\n");
                 scanf("%d", &result);
                 fflush(stdin);//cleans the input file
@@ -69,7 +72,7 @@ int main() {
                 break;//stop the switch statement :0
 
             case 6:
-                system("cls");
+                system("cls");//clear the terminal
                 printf("====Student List====\n");
                 printApprovedsStudents(&list);
                 printf("====List Finished====\n");
