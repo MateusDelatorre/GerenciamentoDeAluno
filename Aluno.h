@@ -144,7 +144,7 @@ void editGrades(Student * student){
     while(loop){
         int i = 0;
         double input = 0.0;
-        system("cls");//clear the terminal
+        //system("cls");//clear the terminal
         printf("====GRADES EDIT MENU====\n");
         for (; i < student->grade_count; i++)
         {
@@ -184,7 +184,7 @@ void editAdress(Address * address){
     while(loop){
         // char name[MAX] = "";
         //Menu para escolha de funções do programa
-        system("cls");//clear the terminal
+        //system("cls");//clear the terminal
         printf("====EDIT ADRESS====\n");
         printf("1. Edit streat name\n");//
         printf("2. Edit number\n");//
@@ -258,7 +258,7 @@ void editStudent(Student * student){
     while(loop){
         // char name[MAX] = "";
         //Menu para escolha de funções do programa
-        system("cls");//clear the terminal
+        //system("cls");//clear the terminal
         printf("====EDIT====\n");
         printf("1. Edit Student Name\n");//
         printf("2. Edit Student Age\n");//

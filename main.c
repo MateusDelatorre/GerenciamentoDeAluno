@@ -22,7 +22,7 @@ int main() {
     while(loop){
         // char name[MAX] = "";
         //Menu para escolha de funções do programa
-        system("cls");//clear the terminal
+        //system("cls");//clear the terminal
         printf("====MENU====\n");//Make the menu a little bit more beautiful
         printf("1. Cadastrar um aluno\n");//Use whatever means necessary to register a new student
         printf("2. Auto load students\n");//for debbug only
@@ -61,12 +61,12 @@ int main() {
                 break;//stop the switch statement :0
 
             case 5:
-                system("cls");//clear the terminal
+                //system("cls");//clear the terminal
                 //printf("\e[1;1H\e[2J");//if you are using unix based systems call this line instead
                 printf("====Student List====\n");
                 printList(&root);
                 printf("====List Finished====\n");
-                system("PAUSE");
+                //system("PAUSE");
                 break;//stop the switch statement :0
 
             case 6:
@@ -93,7 +93,7 @@ int studentRegistration(int * grade_count, TreeRoot * root){
     char name[MAX], sex[SEX_MAX], course[MAX];
     int enroll = 0, age = 0;
 
-    system("cls");//clear the terminal
+    //system("cls");//clear the terminal
     //printf("\e[1;1H\e[2J");//if you are using unix based systems call this line instead
 
     printf("====Student Registration====\n");

@@ -118,20 +118,33 @@ struct branch* getStudent(TreeBranch * tree_branch, int enroll){
 	}
 }
 
-struct branch* getLowerBranch(TreeBranch * tree_branch, int enroll){
+void getPredecessor(TreeBranch * tree_branch, TreeBranch * predecessor_branch, int enroll){
 	if(tree_branch == NULL){
-		return NULL;
+		return;
 	}else{
 		if (tree_branch->student->enroll > enroll)
 		{
-			return getLowerBranch(tree_branch->left_branch, enroll);
+			predecessor_branch = tree_branch;
+			getPredecessor(tree_branch->left_branch, predecessor_branch, enroll);
 		}else if (tree_branch->student->enroll < enroll)
 		{
-			return getLowerBranch(tree_branch->right_branch, enroll);
+			predecessor_branch = tree_branch;
+			getPredecessor(tree_branch->right_branch, predecessor_branch, enroll);
 		}else{
-			return tree_branch;
+			return;
 		}
 	}
+}
+
+struct branch* getLowerBranch(TreeBranch * tree_branch){
+	if (tree_branch != NULL)
+	{
+		if(tree_branch->left_branch == NULL){
+			return tree_branch;
+		}
+		getLowerBranch(tree_branch->left_branch);
+	}
+	return NULL;
 }
 
 
@@ -148,23 +161,93 @@ int removeFromList(TreeRoot * root, int enroll){
 	Acessed on: 26/07/2021
 	*/
 
-	TreeBranch * deletion_branch = getStudent(root->first, enroll);//Deletion node found!
+	/*  ===================================
+		Step 1: Find the deletion node
+    	=================================== */
 	
-	if (deletion_branch == NULL)//just to be sure
+	TreeBranch * deletion_branch = getStudent(root->first, enroll);//Deletion node found!
+
+	
+    /* =========================================
+		Take care of the special case
+		========================================= */
+
+	TreeBranch * successor_branch = deletion_branch->right_branch;// Starting point: right subtree
+	TreeBranch * successor_branch_parent = deletion_branch;// succParent points to prev. node in BST
+
+    if (successor_branch->left_branch == NULL)// Special case detected !
+    {
+		deletion_branch->student = successor_branch->student;// Replace p value
+
+		deletion_branch->right_branch = successor_branch->right_branch;// Replace p right subtree
+		return 1;// Done
+    }
+
+	/* =========================================================
+		Step 2: Find the successor node in the RIGHT subtree of p
+    	========================================================= */
+
+	while (successor_branch->left_branch != NULL)
 	{
-		return 0;
+		successor_branch_parent = successor_branch;   // Track succ's parent !
+		successor_branch = successor_branch->left_branch;    // Always go left to find min. value
 	}
 
-	TreeBranch * successor_branch = getLowerBranch(deletion_branch, deletion_branch->student->enroll);
+	/* ===================================================
+		Step 3: replace content of p with successor node
+		=================================================== */
+	
+	deletion_branch->student = successor_branch->student;
 
-	if (successor_branch == NULL)//there is no successor branch
-	{
-		free(deletion_branch);
-		return 1;
-	}
+	/* ===================================================
+		Step 4: delete successor node
+		=================================================== */
+	
+	successor_branch_parent->left_branch = successor_branch->right_branch;// Now we have "succ's Parent" !!!
 
-	deletion_branch = successor_branch;
-	free(successor_branch);
+	return 1;
+	
+	// if (deletion_branch == NULL)//just to be sure
+	// {
+	// 	return 0;
+	// }
+
+	// TreeBranch * successor_branch = getLowerBranch(deletion_branch->right_branch);
+
+	// if (successor_branch != NULL)
+	// {
+	// 	if (hasRigthBranch(successor_branch))
+	// 	{
+	// 		TreeBranch * predecessor_branch = NULL;
+	// 		getPredecessor(root->first, predecessor_branch, successor_branch->student->enroll);
+	// 		predecessor_branch->left_branch = successor_branch->right_branch;
+	// 		freeStudentData(deletion_branch->student);
+	// 		free(deletion_branch->student);
+	// 		deletion_branch->student = successor_branch->student;
+	// 		free(successor_branch);
+	// 		return 1;
+	// 	}
+	// 	freeStudentData(deletion_branch->student);
+	// 	free(deletion_branch->student);
+	// 	deletion_branch->student = successor_branch->student;
+	// 	successor_branch = NULL;
+	// 	return 1;
+	// }
+	// TreeBranch * predecessor_branch = NULL;
+	// getPredecessor(root->first, predecessor_branch, deletion_branch->student->enroll);
+	// if (deletion_branch->student->enroll > predecessor_branch->student->enroll)
+	// {
+	// 	predecessor_branch->right_branch = NULL;
+	// 	freeStudentData(deletion_branch->student);
+	// 	free(deletion_branch->student);
+	// 	free(deletion_branch);
+	// 	return 1;
+	// }
+	// predecessor_branch->left_branch = NULL;
+	// freeStudentData(deletion_branch->student);
+	// free(deletion_branch->student);
+	// free(deletion_branch);
+	// return 1;
 }
 
 #endif
